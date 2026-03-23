@@ -64,33 +64,41 @@ MJPEG video player for the **Seeed Studio XIAO ESP32S3** with the **Seeed Round 
 
 ## Software Setup
 
-### 1. Install libraries (Arduino Library Manager)
+### 1. Install PlatformIO
 
-- **TFT_eSPI** by Bodmer
-- **JPEGDEC** by bitbank2
-- **SD** (built-in with ESP32 Arduino core)
-- **Wire** (built-in)
+Install the [PlatformIO IDE extension](https://platformio.org/install/ide?install=vscode) for VS Code,
+or use the [PlatformIO CLI](https://docs.platformio.org/en/latest/core/installation/index.html).
 
-### 2. Configure TFT_eSPI
+### 2. Open the project
 
-Copy `esp32_video_player/User_Setup.h` to your TFT_eSPI library folder, replacing the existing file:
-
+```bash
+cd Esp32-video-player
+pio run          # build
+pio run -t upload  # build + flash
+pio device monitor # open serial monitor
 ```
-Arduino/libraries/TFT_eSPI/User_Setup.h
+
+Or open the folder in VS Code — PlatformIO will detect `platformio.ini` automatically.
+
+### 3. TFT_eSPI configuration
+
+`include/User_Setup.h` is picked up automatically via the `build_flags` in `platformio.ini`:
+
+```ini
+-DUSER_SETUP_LOADED
+'-DUSER_SETUP_FILE="User_Setup.h"'
 ```
 
-### 3. Board settings (Arduino IDE)
+No manual file copying needed — the build system handles it.
 
-| Setting | Value |
+### 4. Build environments
+
+| Environment | Use case |
 |---|---|
-| Board | XIAO_ESP32S3 |
-| PSRAM | OPI PSRAM |
-| Partition Scheme | Huge APP (3MB No OTA) |
-| Upload Speed | 921600 |
+| `xiao_esp32s3` | Normal (default) |
+| `xiao_esp32s3_debug` | Verbose logging, debug symbols |
 
-### 4. Compile and upload
-
-Open `esp32_video_player/esp32_video_player.ino` and upload.
+Switch with `pio run -e xiao_esp32s3_debug`.
 
 ---
 
@@ -130,15 +138,18 @@ ffmpeg -i input.mp4 \
 ## Project Structure
 
 ```
-esp32_video_player/
-├── esp32_video_player.ino  — Main sketch (setup, loop, playlist)
-├── config.h                — All pin definitions and tunable settings
-├── User_Setup.h            — TFT_eSPI display driver configuration
-├── avi_player.h/cpp        — AVI parser, MJPEG decoder, I2S audio
-└── touch_ui.h/cpp          — CST816S touch + play/pause overlay
-
+platformio.ini          — Board, libs, build flags
+src/
+├── main.cpp            — setup(), loop(), playlist management
+├── avi_player.cpp      — AVI parser, MJPEG decoder, I2S audio
+└── touch_ui.cpp        — CST816S touch reading + UI overlay drawing
+include/
+├── config.h            — All pin definitions and tunable settings
+├── avi_player.h
+├── touch_ui.h
+└── User_Setup.h        — TFT_eSPI driver config (GC9A01 + XIAO ESP32S3)
 tools/
-└── convert_video.sh        — FFmpeg conversion helper script
+└── convert_video.sh    — FFmpeg conversion helper script
 ```
 
 ---

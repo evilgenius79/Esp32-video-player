@@ -1,0 +1,8 @@
+# PlatformIO build artifacts
+.pio/
+
+# VS Code / PlatformIO IDE
+.vscode/
+
+# macOS
+.DS_Store

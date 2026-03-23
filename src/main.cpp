@@ -5,12 +5,7 @@
  *             Seeed Studio Round Display for XIAO (GC9A01, 240×240)
  *             MAX98357A I2S audio amplifier
  *
- *  Libraries required (install via Arduino Library Manager):
- *    • TFT_eSPI       by Bodmer
- *    • JPEGDEC        by bitbank2
- *    • SD             (built-in)
- *    • Wire           (built-in)
- *
+ *  Build with PlatformIO — see platformio.ini for board and lib config.
  *  See README.md for wiring, pin configuration, and video conversion.
  */
 
